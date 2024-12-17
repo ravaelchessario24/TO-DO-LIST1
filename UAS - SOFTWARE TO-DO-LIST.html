@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <title>✅ To-Do List Sederhana</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 5px;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        input[type="text"] {
+            padding: 15px;
+            font-size: 18px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 15px;
+            font-weight: bold;
+            color: white;
+            background: #007BFF;
+            border: none;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
+        .task {
+            background: #e9f7fa;
+            padding: 15px;
+            margin: 5px;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+        }
+
+        .task button {
+            background: transparent;
+            border: none;
+            color: #ff5722;
+            font-weight: bold;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            input[type="text"], button {
+                padding: 10px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>✅ To-Do List</h2>
+
+        <!-- Input untuk menambah tugas -->
+        <input id="taskInput" type="text" placeholder="Apa yang ingin kamu kerjakan hari ini?" />
+        <button onclick="addTask()">Tambah</button>
+
+        <!-- Daftar tugas -->
+        <div id="taskList" class="task-list"></div>
+    </div>
+
+    <script>
+        // Fungsi untuk menambah tugas
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const taskText = input.value.trim();
+
+            if (taskText) {
+                createTask(taskText);
+                input.value = '';
+                saveTasks();
+            }
+        }
+
+        function createTask(taskText) {
+            const taskList = document.getElementById('taskList');
+            const taskItem = document.createElement('div');
+            taskItem.className = 'task';
+            taskItem.innerHTML = `
+                <span>${taskText}</span>
+                <button onclick="deleteTask(this)">❌</button>
+            `;
+            taskList.appendChild(taskItem);
+        }
+
+        // Menghapus tugas
+        function deleteTask(button) {
+            const taskItem = button.parentElement;
+            taskItem.remove();
+            saveTasks();
+        }
+
+        // Load tugas dari Local Storage
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach(taskText => createTask(taskText));
+        }
+
+        // Simpan tugas ke Local Storage
+        function saveTasks() {
+            const tasks = [];
+            document.querySelectorAll('.task span').forEach(taskSpan => {
+                tasks.push(taskSpan.innerText);
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        window.onload = loadTasks;
+    </script>
+
+</body>
+</html>
